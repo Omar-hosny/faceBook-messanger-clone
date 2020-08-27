@@ -19,6 +19,11 @@
   /* margin-left: 20px;
   margin-right: 20px; */
 }
+/* .app__container {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+} */
 
 .app__formControl {
   display: flex !important ;
@@ -33,4 +38,13 @@
   flex: 0;
   margin-left: 7px !important ;
   margin-right: 10px !important ;
+}
+
+.app__messages {
+  z-index: 1;
+}
+
+.app__messgagesContainer {
+  display: block;
+  margin-bottom: 80px;
 }

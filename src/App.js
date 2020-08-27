@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import "./App.css";
-import { Button, FormControl, Input, InputLabel } from "@material-ui/core";
+import { FormControl, Input } from "@material-ui/core";
 import Message from "./components/Message";
 import db from "./firebase";
 import firebase from "firebase";
@@ -13,9 +13,17 @@ function App() {
   const [messages, setMessages] = useState([]);
   const [username, setUsername] = useState("");
 
+  const messagesEndRef = useRef(null);
+
+  const scrollToBottom = () => {
+    messagesEndRef.current.scrollIntoView({ behavior: "smooth" });
+  };
+
+  useEffect(scrollToBottom, [messages]);
+
   useEffect(() => {
     db.collection("messages")
-      .orderBy("timestamp", "desc")
+      .orderBy("timestamp", "asc")
       .onSnapshot((snapshot) => {
         setMessages(
           snapshot.docs.map((doc) => ({ id: doc.id, message: doc.data() }))
@@ -39,7 +47,7 @@ function App() {
     setInput("");
   };
 
-  console.log(messages);
+  // console.log(messages);
 
   return (
     <div className="App">
@@ -52,11 +60,14 @@ function App() {
       <h2>Welcome {username}</h2>
 
       {/* messages */}
-      <FlipMove>
-        {messages.map(({ id, message }) => (
-          <Message key={id} username={username} message={message} />
-        ))}
-      </FlipMove>
+      <div className="app__messgagesContainer">
+        <FlipMove>
+          {messages.map(({ id, message }) => (
+            <Message key={id} username={username} message={message} />
+          ))}
+          {/* <div ref={messagesEndRef} /> */}
+        </FlipMove>
+      </div>
 
       <form className="app__form">
         <FormControl className="app__formControl">
@@ -80,6 +91,8 @@ function App() {
           </IconButton>
         </FormControl>
       </form>
+
+      <div ref={messagesEndRef} />
     </div>
   );
 }
